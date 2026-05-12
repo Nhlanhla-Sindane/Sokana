@@ -1,340 +1,193 @@
-/* ═══════════════════════════════════════════════════════════════
-   LIVE WISHLIST — app.js
-   Stack: Supabase JS v2 · Vanilla ES6+
-   Table schema:
-     CREATE TABLE wishlist_items (
-       id       SERIAL PRIMARY KEY,
-       name     TEXT NOT NULL,
-       category TEXT NOT NULL,
-       count    INT  NOT NULL DEFAULT 0
-     );
-   ═══════════════════════════════════════════════════════════════ */
+// ── ❶ YOUR WISHLIST DATA ──────────────────────────────────────
+const WISHLIST_DATA = [
+  // Clothing (Tops)
+  {name: 'Sweaters', category: 'Clothing (Tops)'},
+  { name: 'Cardigans', category: 'Clothing (Tops)' },
+  { name: 'Knitwear', category: 'Clothing (Tops)' },
+  { name: 'T-shirts', category: 'Clothing (Tops)' },
+  { name: 'Shirts', category: 'Clothing (Tops)' },
+  { name: 'Coats', category: 'Clothing (Tops)' },
+  { name: 'Jackets', category: 'Clothing (Tops)', url: 'https://bash.com/markham-men-s-slim-knit-stretch-boxy-taupe-jacket-020203acak9/p' },
+  { name: 'Hoodies', category: 'Clothing (Tops)' },
 
-// ── ❶ SUPABASE CONFIG ──────────────────────────────────────────
-// copy or look for these two values from your own project credentials
-// look in your: https://app.supabase.com → Project Settings → API
-const SUPABASE_URL = 'https://rluzwmllfbjqgvkstxjq.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_G7t8-5OyKFgef4lij5B4Ig_JlbbCqao';
+  // Pants / Trousers
+  { name: 'Chinos', category: 'Pants/Trousers' },
+  { name: 'Jeans', category: 'Pants/Trousers' },
+  { name: 'Shorts', category: 'Pants/Trousers' },
+  { name: 'Sweatpants', category: 'Pants/Trousers' },
+  { name: 'Cargo Pants', category: 'Pants/Trousers' },
+  { name: 'Pleated Trousers', category: 'Pants/Trousers' },
+  { name: 'Double-Pleated Trousers', category: 'Pants/Trousers' },
+  { name: 'Formal Trousers', category: 'Pants/Trousers' },
+  { name: 'Briefs / Boxers', category: 'Pants/Trousers' },
 
-// Initialise the Supabase client (exposed globally via the CDN)
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// ── ❷ CATEGORY META (icon + display order) ────────────────────
-// Maps category names from the DB to a display icon.
-// Add / rename freely to match your table data.
-const CATEGORY_META = {
-  'Toiletries':   '🧴',
-  'Accessories':  '💎',
-  'Electronics':  '🖥️',
-  'Clothing':     '👕',
-  'Books':        '📚',
-  'Food & Drink': '🍜',
-  'Home':         '🏠',
-  'Fitness':      '🏋️',
-};
-
-// ── ❸ ITEM IMAGES ─────────────────────────────────────────────
-// Maps item names (lowercase) to a preview image URL.
-// Uses Unsplash Source for high-quality, free previews.
-// Add entries that match your own wishlist items.
-const ITEM_IMAGES = {
-  default: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&q=80',
-
-  // Toiletries
-  'shampoo':        'https://images.unsplash.com/photo-1608248597279-f99d160bfcbc?w=400&q=80',
-  'conditioner':    'https://images.unsplash.com/photo-1571781418606-70265b9cce90?w=400&q=80',
-  'moisturiser':    'https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=400&q=80',
-  'toothbrush':     'https://images.unsplash.com/photo-1559351529-3aa0e1a1ea31?w=400&q=80',
+  // Headwear
+  { name: 'Beanies', category: 'Headwear' },
+  { name: 'Bucket Hats', category: 'Headwear' },
+  { name: 'Baseball Caps', category: 'Headwear' },
+  { name: 'Xhosa Hat/Cap', category: 'Headwear' },
+  { name: 'Fedora', category: 'Headwear' },
 
   // Accessories
-  'sunglasses':     'https://images.unsplash.com/photo-1511499767150-a48a237f0083?w=400&q=80',
-  'watch':          'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80',
-  'wallet':         'https://images.unsplash.com/photo-1627123424574-724758594e93?w=400&q=80',
-  'belt':           'https://images.unsplash.com/photo-1624222247344-550fb60583dc?w=400&q=80',
+  { name: 'Rings', category: 'Accessories', url: 'https://za.shein.com/Carbon-Fiber-Stainless-Steel-ECG-Ring-Gold-Fashionable-ECG-Ring-Love-Declaration-Unisex-Wedding-Ring-p-76789333.html?src_identifier=st%3D2%60sc%3Drings+men%60sr%3D0%60ps%3D1&src_module=search&src_tab_page_id=page_home1778076242242&mallCode=1&pageListType=4&imgRatio=3-4&detailBusinessFrom=0-1_76789333%7C0-2&pageListType=4&main_attr=27_112' },
+  { name: 'Silk Scarves', category: 'Accessories', url: 'https://www.legit.co.za/products/2-pack-chain-print-satin-scarves-neutral-42288801' },
+  { name: 'Belts', category: 'Accessories' },
+  { name: 'Tie', category: 'Accessories' },
+  { name: 'Suit Handkerchief', category: 'Accessories' },
+  { name: 'Glasses (Clear)', category: 'Accessories' },
+  { name: 'Sunglasses', category: 'Accessories' },
+  { name: 'Socks', category: 'Accessories' },
+  { name: 'Watch', category: 'Accessories' },
+
+  // Shoes
+  { name: 'Sneakers', category: 'Shoes' },
+  { name: 'Loafers', category: 'Shoes' },
+  { name: 'Sandals', category: 'Shoes' },
+  { name: 'Slippers', category: 'Shoes' },
+  { name: 'Work Boots', category: 'Shoes' },
+  
+
+  // Toiletries
+  { name: 'Soap', category: 'Toiletries' },
+  { name: 'Face Wash', category: 'Toiletries' },
+  { name: 'Face Moisturizer', category: 'Toiletries' },
+  { name: 'Body Lotion', category: 'Toiletries' },
+  { name: 'Toothpaste', category: 'Toiletries' },
+  { name: 'Toothbrush', category: 'Toiletries' },
+  { name: 'Scrub', category: 'Toiletries' },
+  { name: 'Perfume / Cologne (Oud)', category: 'Toiletries' },
+  { name: 'Deodorant Spray', category: 'Toiletries' },
+  { name: 'Roll-On Deodorant', category: 'Toiletries' },
+  { name: 'Blistex DCT (Daily Conditioning Treatment) ', category: 'Toiletries' },
 
   // Electronics
-  'laptop':         'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&q=80',
-  'headphones':     'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80',
-  'keyboard':       'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=400&q=80',
-  'mouse':          'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=400&q=80',
+  { name: 'Smartphone', category: 'Electronics' },
+  { name: 'Earphones', category: 'Electronics' },
+  { name: 'Headphones', category: 'Electronics' },
+  { name: 'C-type Cable / Charger', category: 'Electronics' },
+  { name: 'Electric Coffee Grinder', category: 'Electronics' },
+  { name: 'Electric Milk Frother', category: 'Electronics' },
+  { name: 'USB', category: 'Electronics' },
+  { name: 'Keyboard (wireless/wired)', category: 'Electronics' },
+  { name: 'Monitor', category: 'Electronics' },
 
-  // Clothing
-  'hoodie':         'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=400&q=80',
-  'sneakers':       'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&q=80',
-  'jeans':          'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&q=80',
-  't-shirt':        'https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=400&q=80',
+  // Coffee
+  { name: 'Terbodore Coffee Beans', category: 'Coffee' },
+  { name: 'Magnificent Barista Boys Coffee Beans', category: 'Coffee' },
+  { name: 'Babylonstoren Coffee Beans', category: 'Coffee' },
+  { name: 'Moka Pot', category: 'Coffee' },
+  { name: 'Milk Frothing Pitcher', category: 'Coffee' },
+
+  // Stationery
+  { name: 'Notebooks', category: 'Stationery' },
+  { name: 'Pens', category: 'Stationery' },
+  { name: 'Pencils', category: 'Stationery' },
+  
+  // Farming
+  { name: 'Seeds (Vegetables)', category: 'Farming' },
+  { name: 'Seeds (Flowers)', category: 'Farming' },
+  { name: 'Seeds (Fruits)', category: 'Farming' },
+  { name: 'Compost', category: 'Farming' },
+  { name: 'Garden Tools', category: 'Farming' },
+  { name: '50% Visibility Nets', category: 'Farming' },
+  { name: 'Spray Bottles', category: 'Farming' },
+  { name: 'Pot Plants', category: 'Farming' },
+  { name: 'Trimming Scissors', category: 'Farming' },
+  { name: 'Cocopeat', category: 'Farming' },
+
+  // Self-improvement
+  { name: 'Books (pyschology, philosophy& communication)', category: 'Self-improvement' },
+
+
+  // Ambitious / Luxury
+  { name: 'Continental Tyres (185/60/R15)', category: 'Ambitious / Luxury' },
+  { name: 'J.Cole VVIP Tickets', category: 'Ambitious / Luxury' },
+  { name: 'Samsung A26 5G', category: 'Ambitious / Luxury' }
+];
+
+// ── IMAGE DATABASE ──────────────────────────────────────────
+// Paste your store image URLs or Supabase Storage links here.
+const ITEM_IMAGES = {
+  // clothing (tops)
+  'Sweaters': 'https://gabeclothing.ca/cdn/shop/files/DSCN1154-A-Copy.webp?v=1685665204&width=1946',
+  'Cardigans': 'https://thefoschini.vtexassets.com/arquivos/ids/225095807-800-1067?v=639100169653600000&width=800&height=1067&aspect=true',
+  'Knitwear': 'https://www.careofcarl.com/bilder/artiklar/zoom/25657411r_1.jpg?m=1692366376?0413',
+  'T-shirts': 'https://www.edgars.co.za/cdn/shop/files/EDG230720249270.jpg?v=1721813896&width=1080',
+  'Shirts': 'https://johncraig.co.za/media/catalog/product/cache/8e71962534cb112d3996d77af375c1d8/g/n/gnt25w-gant-poplin-shirt-wht-3000100-100-v1_jpg.jpg',
+  'Coats': 'https://godwincharli.com/cdn/shop/collections/Group_6b32f689-8b24-4989-a342-7eb3b4099301.jpg?v=1649759449',
+  'Jackets': 'https://bash.com/markham-men-s-slim-knit-stretch-boxy-taupe-jacket-020203acak9/p',
+
+  // pants/trousers
+  'Chinos': 'https://cdn.shopify.com/s/files/1/0283/0187/2747/products/IMG_20230829_125029_800x.jpg?v=1693304418',
+  'Jeans': 'https://cdn.shopify.com/s/files/1/0283/0187/2747/products/IMG_20230829_125029_800x.jpg?v=1693304418',
+  'Shorts': 'https://cdn.shopify.com/s/files/1/0283/0187/2747/products/IMG_20230829_125029_800x.jpg?v=1693304418',
+  'Sweatpants': 'https://cdn.shopify.com/s/files/1/0283/0187/2747/products/IMG_20230829_125029_800x.jpg?v=1693304418',
+  'Cargo Pants': 'https://cdn.shopify.com/s/files/1/0283/0187/2747/products/IMG_20230829_125029_800x.jpg?v=1693304418',
+  'Pleated Trousers': 'https://cdn.shopify.com/s/files/1/0283/0187/2747/products/IMG_20230829_125029_800x.jpg?v=1693304418',
+  'Double-Pleated Trousers': 'https://cdn.shopify.com/s/files/1/0283/0187/2747/products/IMG_20230829_125029_800x.jpg?v=1693304418',
+  'Formal Trousers': 'https://cdn.shopify.com/s/files/1/0283/0187/2747/products/IMG_20230829_125029_800x.jpg?v=1693304418',
+  'Briefs / Boxers': 'https://cdn.shopify.com/s/files/1/0283/0187/2747/products/IMG_20230829_125029_800x.jpg?v=1693304418',
+  // ... Add others as needed
 };
 
-/**
- * Returns the best matching preview image URL for an item name.
- * Tries an exact lowercase match first; falls back to default.
- */
-function getImageUrl(itemName) {
-  const key = itemName.toLowerCase().trim();
-  return ITEM_IMAGES[key] || ITEM_IMAGES['default'];
+// ── ❸ DOM ELEMENTS ────────────────────────────────────────────
+const gridEl = document.getElementById('wishlistGrid');
+const imgOverlay = document.getElementById('imgOverlay');
+const overlayImg = document.getElementById('overlayImg');
+const overlayDownload = document.getElementById('overlayDownload');
+
+// ── ❹ RENDER LOGIC ────────────────────────────────────────────
+function renderStaticWishlist() {
+  gridEl.innerHTML = ''; // Clear loader
+
+  // Group items by category
+  const categories = [...new Set(WISHLIST_DATA.map(item => item.category))];
+
+  categories.forEach(cat => {
+    const section = document.createElement('section');
+    section.className = 'category-group';
+    
+    const itemsInCat = WISHLIST_DATA.filter(i => i.category === cat);
+    
+    section.innerHTML = `
+      <h2 class="category-title">${cat}</h2>
+      <ul class="item-list">
+        ${itemsInCat.map(item => `
+          <li class="wish-item" data-name="${item.name.toLowerCase()}">
+            <span class="item-bullet">✦</span>
+            <span class="item-text">${item.name}</span>
+          </li>
+        `).join('')}
+      </ul>
+    `;
+    gridEl.appendChild(section);
+  });
+
+  setupHoverListeners();
 }
 
-// ── ❹ DOM REFERENCES ──────────────────────────────────────────
-const gridEl        = document.getElementById('wishlistGrid');
-const loaderEl      = document.getElementById('gridLoader');
-const overlayEl     = document.getElementById('imgOverlay');
-const overlayImgEl  = document.getElementById('overlayImg');
-const downloadBtnEl = document.getElementById('overlayDownload');
-const toastEl       = document.getElementById('toast');
+// ── ❺ HOVER & DOWNLOAD LOGIC ──────────────────────────────────
+function setupHoverListeners() {
+  const items = document.querySelectorAll('.wish-item');
+  
+  items.forEach(item => {
+    item.addEventListener('mouseenter', (e) => {
+      const name = item.getAttribute('data-name');
+      const imgUrl = ITEM_IMAGES[name] || 'https://via.placeholder.com/400?text=No+Image';
+      
+      overlayImg.src = imgUrl;
+      imgOverlay.style.display = 'flex';
+      
+      // Position overlay near mouse or fixed
+      imgOverlay.style.left = `${e.pageX + 20}px`;
+      imgOverlay.style.top = `${e.pageY - 100}px`;
+    });
 
-// In-memory store of items so real-time patches are instant
-let itemsCache = {}; // keyed by item id
-
-// ── ❺ BOOT ────────────────────────────────────────────────────
-(async function boot() {
-  await loadAndRender();
-  subscribeToChanges();
-})();
-
-// ── ❻ LOAD & RENDER ───────────────────────────────────────────
-/**
- * Fetches all rows from the `wishlist_items` table,
- * groups them by category, and renders the grid.
- */
-async function loadAndRender() {
-  const { data, error } = await supabase
-    .from('wishlist_items')
-    .select('*')
-    .order('category')
-    .order('name');
-
-  loaderEl.remove(); // hide the spinner
-
-  if (error) {
-    showConfigError(error.message);
-    return;
-  }
-
-  // Cache all items
-  data.forEach(item => { itemsCache[item.id] = item; });
-
-  // Group by category
-  const grouped = groupByCategory(data);
-
-  // Render each category column
-  Object.entries(grouped).forEach(([category, items], idx) => {
-    const card = buildCategoryCard(category, items, idx);
-    gridEl.appendChild(card);
+    item.addEventListener('mouseleave', () => {
+      imgOverlay.style.display = 'none';
+    });
   });
 }
 
-/** Groups an array of items into { category: [items] } */
-function groupByCategory(items) {
-  return items.reduce((acc, item) => {
-    (acc[item.category] = acc[item.category] || []).push(item);
-    return acc;
-  }, {});
-}
-
-// ── ❼ BUILD CATEGORY CARD ─────────────────────────────────────
-function buildCategoryCard(category, items, idx) {
-  const icon = CATEGORY_META[category] || '📦';
-
-  const card = document.createElement('div');
-  card.className = 'category-card';
-  card.style.animationDelay = `${idx * 0.07}s`;
-
-  card.innerHTML = `
-    <div class="category-header">
-      <span class="category-icon">${icon}</span>
-      <span class="category-title">${category}</span>
-    </div>
-    <ul class="item-list" data-category="${category}"></ul>
-  `;
-
-  const list = card.querySelector('.item-list');
-  items.forEach(item => list.appendChild(buildItemRow(item)));
-
-  return card;
-}
-
-// ── ❽ BUILD ITEM ROW ──────────────────────────────────────────
-function buildItemRow(item) {
-  const li = document.createElement('li');
-  li.className = 'item-row';
-  li.dataset.id = item.id;
-
-  li.innerHTML = `
-    <span class="item-name">${item.name}</span>
-    <span class="item-count" id="count-${item.id}">${item.count}</span>
-  `;
-
-  // ── Click: increment count in Supabase
-  li.addEventListener('click', () => handleItemClick(item.id));
-
-  // ── Hover: show image overlay
-  li.addEventListener('mouseenter', (e) => showOverlay(item.name, e));
-  li.addEventListener('mousemove',  (e) => positionOverlay(e));
-  li.addEventListener('mouseleave', hideOverlay);
-
-  return li;
-}
-
-// ── ❾ CLICK HANDLER ───────────────────────────────────────────
-/**
- * Increments the item's count in Supabase.
- * The real-time subscription will then update the UI.
- */
-async function handleItemClick(id) {
-  const current = itemsCache[id]?.count ?? 0;
-
-  const { error } = await supabase
-    .from('wishlist_items')
-    .update({ count: current + 1 })
-    .eq('id', id);
-
-  if (error) {
-    showToast('⚠️ Could not update — check Supabase config');
-  }
-}
-
-// ── ❿ REAL-TIME SUBSCRIPTION ──────────────────────────────────
-/**
- * Subscribes to INSERT, UPDATE, and DELETE events on the table.
- * Any change made by any user anywhere updates every connected client.
- */
-function subscribeToChanges() {
-  supabase
-    .channel('wishlist-live')
-    .on(
-      'postgres_changes',
-      { event: '*', schema: 'public', table: 'wishlist_items' },
-      (payload) => {
-        const { eventType, new: newRow, old: oldRow } = payload;
-
-        if (eventType === 'UPDATE') {
-          // Patch the in-memory cache
-          itemsCache[newRow.id] = newRow;
-
-          // Animate the count badge
-          const countEl = document.getElementById(`count-${newRow.id}`);
-          if (countEl) {
-            countEl.textContent = newRow.count;
-            countEl.classList.remove('bump');
-            void countEl.offsetWidth; // reflow to restart animation
-            countEl.classList.add('bump');
-          }
-
-          showToast(`✦ "${newRow.name}" updated → ${newRow.count}`);
-        }
-
-        if (eventType === 'INSERT') {
-          // Re-render the whole grid to add the new item cleanly
-          gridEl.innerHTML = '';
-          const allItems = Object.values(itemsCache);
-          allItems.push(newRow);
-          itemsCache[newRow.id] = newRow;
-          const grouped = groupByCategory(allItems);
-          Object.entries(grouped).forEach(([cat, items], idx) => {
-            gridEl.appendChild(buildCategoryCard(cat, items, idx));
-          });
-        }
-
-        if (eventType === 'DELETE') {
-          delete itemsCache[oldRow.id];
-          const row = document.querySelector(`.item-row[data-id="${oldRow.id}"]`);
-          row?.closest('li')?.remove();
-        }
-      }
-    )
-    .subscribe();
-}
-
-// ── ⓫ HOVER OVERLAY ───────────────────────────────────────────
-let overlayTimeout;
-
-/** Shows the floating image preview near the cursor */
-function showOverlay(itemName, e) {
-  clearTimeout(overlayTimeout);
-  const url = getImageUrl(itemName);
-  overlayImgEl.src = url;
-  overlayEl.style.display = 'block';
-  overlayEl.classList.add('visible');
-  positionOverlay(e);
-
-  // Wire download button each time
-  downloadBtnEl.onclick = () => downloadImage(url, itemName);
-}
-
-/** Keeps the overlay near the cursor as the mouse moves */
-function positionOverlay(e) {
-  const offset = 16;
-  let x = e.clientX + offset;
-  let y = e.clientY + offset;
-
-  // Keep within viewport
-  if (x + 210 > window.innerWidth)  x = e.clientX - 210 - offset;
-  if (y + 200 > window.innerHeight) y = e.clientY - 200 - offset;
-
-  overlayEl.style.left = `${x}px`;
-  overlayEl.style.top  = `${y}px`;
-}
-
-/** Hides the overlay with a short delay (prevents flicker) */
-function hideOverlay() {
-  overlayTimeout = setTimeout(() => {
-    overlayEl.style.display = 'none';
-    overlayEl.classList.remove('visible');
-  }, 80);
-}
-
-// ── ⓬ DOWNLOAD ────────────────────────────────────────────────
-/**
- * Downloads the preview image to the user's device.
- * Uses fetch → blob → anchor click trick to force a download.
- */
-async function downloadImage(url, itemName) {
-  try {
-    const res  = await fetch(url);
-    const blob = await res.blob();
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `${itemName.replace(/\s+/g, '_')}_preview.jpg`;
-    link.click();
-    URL.revokeObjectURL(link.href);
-    showToast(`⬇ Downloaded "${itemName}" image`);
-  } catch {
-    showToast('⚠️ Could not download image');
-  }
-}
-
-// ── ⓭ TOAST HELPER ───────────────────────────────────────────
-let toastTimer;
-function showToast(msg) {
-  toastEl.textContent = msg;
-  toastEl.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 2800);
-}
-
-// ── ⓮ CONFIG ERROR FALLBACK ──────────────────────────────────
-/**
- * Renders a helpful error card when Supabase credentials are
- * not yet configured, so the developer can see what to do.
- */
-function showConfigError(msg) {
-  gridEl.innerHTML = `
-    <div style="
-      grid-column: 1/-1;
-      background: #1e293b;
-      border: 1px solid #f87171;
-      border-radius: 1rem;
-      padding: 2rem;
-      text-align: center;
-      color: #f87171;
-    ">
-      <p style="font-size:1.1rem;font-weight:700;margin-bottom:.5rem">⚠️ Supabase not configured</p>
-      <p style="color:#94a3b8;font-size:.88rem;margin-bottom:1rem">${msg}</p>
-      <p style="color:#94a3b8;font-size:.82rem;line-height:1.8">
-        1. Open <code style="color:#60a5fa">app.js</code><br/>
-        2. Replace <code style="color:#60a5fa">SUPABASE_URL</code> and <code style="color:#60a5fa">SUPABASE_ANON_KEY</code><br/>
-        3. Create a <code style="color:#60a5fa">wishlist_items</code> table with columns:
-           <strong>id, name, category, count</strong>
-      </p>
-    </div>`;
-}
+// Initial Run
+renderStaticWishlist();
