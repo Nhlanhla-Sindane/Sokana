@@ -1,4 +1,4 @@
-// ── ❶ YOUR WISHLIST DATA ──────────────────────────────────────
+// ── YOUR WISHLIST DATA ──────────────────────────────────────
 const WISHLIST_DATA = [
   // Clothing (Tops)
   {name: 'Sweaters', category: 'Clothing (Tops)', url: 'https://gabeclothing.ca/cdn/shop/files/DSCN1154-A-Copy.webp?v=1685665204&width=1946'},
@@ -85,33 +85,33 @@ const WISHLIST_DATA = [
 
   // Farming
   { name: 'Seeds (Vegetables)', category: 'Farming', url: '' },
-  { name: 'Seeds (Flowers)', category: 'Farming' },
-  { name: 'Seeds (Fruits)', category: 'Farming' },
-  { name: 'Compost', category: 'Farming' },
-  { name: 'Garden Tools', category: 'Farming' },
-  { name: '50% Visibility Nets', category: 'Farming' },
-  { name: 'Spray Bottles', category: 'Farming' },
-  { name: 'Pot Plants', category: 'Farming' },
-  { name: 'Trimming Scissors', category: 'Farming' },
-  { name: 'Cocopeat', category: 'Farming' },
+  { name: 'Seeds (Flowers)', category: 'Farming', url: '' },
+  { name: 'Seeds (Fruits)', category: 'Farming', url: '' },
+  { name: 'Compost', category: 'Farming', url: '' },
+  { name: 'Garden Tools', category: 'Farming', url: '' },
+  { name: '50% Visibility Nets', category: 'Farming', url: '' },
+  { name: 'Spray Bottles', category: 'Farming', url: '' },
+  { name: 'Pot Plants', category: 'Farming', url: '' },
+  { name: 'Trimming Scissors', category: 'Farming', url: '' },
+  { name: 'Cocopeat', category: 'Farming', url: '' },
 
   // Self-improvement
-  { name: 'Books (pyschology, philosophy& communication)', category: 'Self-improvement' },
+  { name: 'Books (pyschology, philosophy& communication)', category: 'Self-improvement', url: '' },
 
 
   // Ambitious / Luxury
-  { name: 'Continental Tyres (185/60/R15)', category: 'Ambitious / Luxury' },
-  { name: 'J.Cole VVIP Tickets', category: 'Ambitious / Luxury' },
-  { name: 'Samsung A26 5G', category: 'Ambitious / Luxury' }
+  { name: 'Continental Tyres (185/60/R15)', category: 'Ambitious / Luxury', url: '' },
+  { name: 'J.Cole VVIP Tickets', category: 'Ambitious / Luxury', url: '' },
+  { name: 'Samsung A26 5G', category: 'Ambitious / Luxury', url: '' }
 ];
 
-// ── ❸ DOM ELEMENTS ────────────────────────────────────────────
+// ── DOM ELEMENTS ────────────────────────────────────────────
 const gridEl = document.getElementById('wishlistGrid');
 //const imgOverlay = document.getElementById('imgOverlay');
 //const overlayImg = document.getElementById('overlayImg');
 //const overlayDownload = document.getElementById('overlayDownload');
 
-// ── ❸ RENDER LOGIC ────────────────────────────────────────────
+// ── RENDER LOGIC ────────────────────────────────────────────
 function renderStaticWishlist() {
   gridEl.innerHTML = ''; 
 
