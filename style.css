@@ -1,0 +1,407 @@
+/* ═══════════════════════════════════════════════
+   LIVE WISHLIST — style.css
+   Palette: Deep Navy bg · Neon Blue accents
+   Fonts:   Syne (headings) · DM Sans (body)
+═══════════════════════════════════════════════ */
+
+/* ── CSS Variables ── */
+:root {
+  --bg:          #0f172a;
+  --bg-card:     #1e293b;
+  --bg-card-alt: #162032;
+  --accent:      #60a5fa;
+  --accent-glow: rgba(96, 165, 250, 0.35);
+  --accent-dim:  rgba(96, 165, 250, 0.15);
+  --text:        #e2e8f0;
+  --text-muted:  #94a3b8;
+  --border:      rgba(96, 165, 250, 0.22);
+  --radius:      1rem;
+  --radius-lg:   1.5rem;
+  --transition:  0.25s cubic-bezier(.4,0,.2,1);
+}
+
+/* ── Reset & Base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+  min-height: 100vh;
+  /* Subtle dot-grid texture */
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(96,165,250,0.05) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(96,165,250,0.04) 0%, transparent 50%),
+    radial-gradient(rgba(96,165,250,0.04) 1px, transparent 1px);
+  background-size: auto, auto, 28px 28px;
+}
+
+/* ══════════════════════════════════════════════
+   HEADER
+══════════════════════════════════════════════ */
+.site-header {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  padding: 2.5rem 3rem 2rem;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+
+/* ── Left panel (40%) ── */
+.header-left {
+  flex: 0 0 40%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.profile-ring {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  padding: 4px;
+  background: conic-gradient(
+    var(--accent) 0deg,
+    transparent 120deg,
+    var(--accent) 180deg,
+    transparent 300deg,
+    var(--accent) 360deg
+  );
+  box-shadow:
+    0 0 24px var(--accent-glow),
+    0 0 60px rgba(96,165,250,0.15),
+    inset 0 0 12px rgba(96,165,250,0.1);
+  animation: spin-ring 8s linear infinite;
+}
+
+@keyframes spin-ring {
+  to { filter: hue-rotate(30deg); }
+}
+
+.avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: 2px;
+  border: 3px solid var(--bg);
+}
+
+/* Replace avatar-placeholder with real image if provided */
+.profile-ring img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--bg);
+}
+
+.live-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--accent-dim);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 6px #22c55e;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.75); }
+}
+
+/* ── Right panel (60%) ── */
+.header-right {
+  flex: 1;
+}
+
+.site-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  margin-bottom: 1rem;
+}
+
+.site-title .accent {
+  color: var(--accent);
+  text-shadow: 0 0 20px var(--accent-glow);
+}
+
+.site-intro {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.75;
+  max-width: 560px;
+}
+
+/* ══════════════════════════════════════════════
+   WISHLIST GRID
+══════════════════════════════════════════════ */
+.wishlist-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  padding: 2.5rem 3rem;
+}
+
+@media (max-width: 1100px) { .wishlist-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 780px)  { .wishlist-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 520px)  { .wishlist-grid { grid-template-columns: 1fr; padding: 1.5rem 1.25rem; } }
+
+/* ── Category Column Card ── */
+.category-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: box-shadow var(--transition), transform var(--transition);
+  animation: fadeUp 0.5s ease both;
+}
+
+.category-card:hover {
+  box-shadow: 0 0 30px var(--accent-glow);
+  transform: translateY(-3px);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1rem 1.25rem 0.85rem;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(135deg, var(--bg-card-alt) 0%, var(--bg-card) 100%);
+}
+
+.category-icon {
+  font-size: 1.3rem;
+}
+
+.category-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.5px;
+}
+
+/* ── Item List ── */
+.item-list {
+  list-style: none;
+  padding: 0.5rem 0;
+}
+
+/* ── Single Item Row ── */
+.item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1.25rem;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  transition: background var(--transition), color var(--transition);
+  position: relative;
+  gap: 0.5rem;
+}
+
+.item-row:hover {
+  background: var(--accent-dim);
+}
+
+.item-row:active {
+  transform: scale(0.98);
+}
+
+.item-name {
+  font-size: 0.88rem;
+  font-weight: 500;
+  flex: 1;
+  color: var(--text);
+  transition: color var(--transition);
+}
+
+.item-row:hover .item-name {
+  color: #fff;
+}
+
+/* Count badge */
+.item-count {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-dim);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 0.15rem 0.55rem;
+  min-width: 28px;
+  text-align: center;
+  transition: background var(--transition), box-shadow var(--transition);
+}
+
+.item-count.bump {
+  animation: bump 0.3s ease;
+}
+
+@keyframes bump {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.4); background: var(--accent); color: var(--bg); box-shadow: 0 0 12px var(--accent-glow); }
+  100% { transform: scale(1); }
+}
+
+/* ── Loader ── */
+.grid-loader {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 4rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.loader-ring {
+  width: 44px;
+  height: 44px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ══════════════════════════════════════════════
+   HOVER IMAGE OVERLAY (fixed, positioned by JS)
+══════════════════════════════════════════════ */
+.img-overlay {
+  position: fixed;
+  z-index: 999;
+  pointer-events: none; /* allow clicks through most of the time */
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  box-shadow: 0 0 32px var(--accent-glow), 0 8px 32px rgba(0,0,0,0.6);
+  overflow: hidden;
+  width: 200px;
+  transition: opacity 0.15s ease;
+}
+
+.img-overlay.visible {
+  pointer-events: auto; /* allow download click */
+}
+
+.overlay-img {
+  width: 200px;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+}
+
+.overlay-download {
+  width: 100%;
+  padding: 0.5rem;
+  background: var(--accent-dim);
+  border: none;
+  border-top: 1px solid var(--border);
+  color: var(--accent);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition);
+}
+
+.overlay-download:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* ══════════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════════ */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  border-radius: 99px;
+  padding: 0.6rem 1.5rem;
+  font-size: 0.85rem;
+  color: var(--accent);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ══════════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════════ */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding: 1.75rem 3rem;
+  text-align: center;
+}
+
+.footer-copy {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.3px;
+  line-height: 1.8;
+}
+
+/* ══════════════════════════════════════════════
+   RESPONSIVE HEADER
+══════════════════════════════════════════════ */
+@media (max-width: 700px) {
+  .site-header {
+    flex-direction: column;
+    padding: 2rem 1.5rem;
+  }
+  .header-left { flex: none; }
+  .header-right { text-align: center; }
+  .site-intro { margin: 0 auto; }
+}

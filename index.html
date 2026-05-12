@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Wishlist</title>
+  <link rel="stylesheet" href="style.css" />
+  <!-- Supabase CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Google Fonts: Syne (display) + DM Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- ════════════════════ HEADER ════════════════════ -->
+  <header class="site-header">
+    <!-- Left 40%: Profile -->
+    <div class="header-left">
+      <div class="profile-ring">
+        <!-- Placeholder avatar using initials -->
+        <!-- <div class="avatar-placeholder">NS</div> -->
+         <img src="darkme.jpg" alt="Profile">
+      </div>
+      <div class="live-badge">
+        <span class="pulse-dot"></span>
+        LIVE
+      </div>
+    </div>
+
+    <!-- Right 60%: Title + intro -->
+    <div class="header-right">
+      <h1 class="site-title">Umsebenzi Kwa <span class="accent">Sithole</span></h1>
+      <p class="site-intro">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque vehicula
+        sapien ut nibh commodo, a pretium nisi lacinia. Aliquam erat volutpat.
+        Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere
+        cubilia curae — click any item to log your interest, and watch the tally
+        update live across every device.
+      </p>
+    </div>
+  </header>
+
+  <!-- ════════════════════ MAIN GRID ════════════════════ -->
+  <main class="wishlist-grid" id="wishlistGrid">
+    <!-- Categories are rendered dynamically by app.js -->
+    <div class="grid-loader" id="gridLoader">
+      <div class="loader-ring"></div>
+      <p>Connecting to Supabase…</p>
+    </div>
+  </main>
+
+  <!-- ════════════════════ FOOTER ════════════════════ -->
+  <footer class="site-footer">
+    <p class="footer-copy">
+      ✦ Live Wishlist &mdash; powered by Supabase real-time subscriptions &mdash;
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque habitant
+      morbi tristique senectus et netus et malesuada fames ac turpis egestas. ✦
+    </p>
+  </footer>
+
+  <!-- ════════════════════ HOVER IMAGE OVERLAY (shared singleton) ════════════════════ -->
+  <div class="img-overlay" id="imgOverlay" style="display:none;">
+    <img class="overlay-img" id="overlayImg" src="" alt="Item preview" />
+    <button class="overlay-download" id="overlayDownload">⬇ Download</button>
+  </div>
+
+  <!-- Toast notification -->
+  <div class="toast" id="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
