@@ -28,15 +28,9 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 400;
-  min-height: 100vh;
-  /* Subtle dot-grid texture */
-  background-image:
-    radial-gradient(circle at 20% 20%, rgba(96,165,250,0.05) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(96,165,250,0.04) 0%, transparent 50%),
-    radial-gradient(rgba(96,165,250,0.04) 1px, transparent 1px);
-  background-size: auto, auto, 28px 28px;
+  /* Changed to a formal, clean font */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
 }
 
 /* ══════════════════════════════════════════════
@@ -62,22 +56,12 @@ body {
 }
 
 .profile-ring {
-  width: 180px;
-  height: 180px;
+  width: 240px;   /* Increased from 180px */
+  height: 240px;  /* Increased from 180px */
   border-radius: 50%;
-  padding: 4px;
-  background: conic-gradient(
-    var(--accent) 0deg,
-    transparent 120deg,
-    var(--accent) 180deg,
-    transparent 300deg,
-    var(--accent) 360deg
-  );
-  box-shadow:
-    0 0 24px var(--accent-glow),
-    0 0 60px rgba(96,165,250,0.15),
-    inset 0 0 12px rgba(96,165,250,0.1);
-  animation: spin-ring 8s linear infinite;
+  border: 3px solid var(--accent); /* Slightly thicker border for the bigger size */
+  overflow: hidden;
+  box-shadow: 0 0 30px var(--accent-glow);
 }
 
 @keyframes spin-ring {
@@ -144,11 +128,9 @@ body {
 }
 
 .site-title {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-size: 3.5rem;
   font-weight: 800;
-  line-height: 1.1;
-  letter-spacing: -1px;
+  color: #ffffff;
   margin-bottom: 1rem;
 }
 
@@ -220,9 +202,15 @@ body {
 }
 
 /* ── Item List ── */
-.item-list {
-  list-style: none;
-  padding: 0.5rem 0;
+.item-link {
+  color: var(--text);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.item-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
 }
 
 /* ── Single Item Row ── */
